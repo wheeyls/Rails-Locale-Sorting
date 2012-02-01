@@ -79,7 +79,7 @@ module RailsLocaleSorter
       end
     end
 
-    def create_missing_keys(all_keys, object)
+    def create_missing_keys(object, all_keys)
       ak_lang = all_keys.first[0]
       ob_lang = object.first[0]
 

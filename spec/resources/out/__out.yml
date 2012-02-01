@@ -1,7 +1,7 @@
 --- 
-src: 
+out: 
   date: 
     src_only: ~
   text: 
-    both: Both
+    both: ~
     source_only: ~
