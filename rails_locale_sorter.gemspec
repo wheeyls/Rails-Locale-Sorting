@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = RailsLocaleSorter::VERSION
   s.authors     = ["Michael Wheeler"]
   s.email       = ["michael.wheeler@tapjoy.com"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.homepage    = "http://github.com/matchboxmike"
+  s.summary     = %q{Manage Rails Locale YAML: Sort, remove duplicates, and create stubs for other languages.}
+  s.description = %q{Manage Rails Locale YAML: Sort, remove duplicates, and create stubs for other languages.}
 
   s.rubyforge_project = "rails_locale_sorter"
 
@@ -20,5 +20,7 @@ Gem::Specification.new do |s|
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
+  s.add_dependency "rubygems-update", ">= 1.3.7"
+  s.add_dependency "activesupport", ">= 2.3.14"
+  s.add_dependency "ya2yaml", ">= 0.30"
 end
