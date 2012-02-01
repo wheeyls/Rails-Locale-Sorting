@@ -19,7 +19,7 @@ describe RailsLocaleSorter::LocaleManager do
   it "writes blank keys for new values" do
     @lm.parse_to_yaml "src.yml"
 
-    result = File.open("#{OUT_DIR}/__out.yml").read
+    result = File.open("#{OUT_DIR}/out.yml").read
     result.should include "source_only: ~"
     result.should include "src_only: ~"
     result.should include "out:"

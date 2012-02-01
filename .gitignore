@@ -2,3 +2,5 @@
 .bundle
 Gemfile.lock
 pkg/*
+spec/resources/out/*
+spec/resources/src/*

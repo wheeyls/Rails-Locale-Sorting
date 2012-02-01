@@ -57,7 +57,7 @@ module RailsLocaleSorter
         end
 
         me = OrderFact.convert_and_sort(me, true)
-        File.open("#{@out}/__#{filename}", "w+") do |fw|
+        File.open("#{@out}/#{filename}", "w+") do |fw|
           fw.puts me.ya2yaml(:syck_compatible => true)
         end
       end
