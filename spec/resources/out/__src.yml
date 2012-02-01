@@ -1,7 +1,0 @@
---- 
-src: 
-  date: 
-    src_only: Only
-  text: 
-    both: Both
-    source_only: "Source Only"
