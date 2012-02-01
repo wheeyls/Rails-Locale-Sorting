@@ -1,0 +1,6 @@
+src:
+  text:
+    source_only: Source Only
+    both: Both
+  date:
+    src_only: Only

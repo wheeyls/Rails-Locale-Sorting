@@ -42,6 +42,30 @@ module RailsLocaleSorter
       @out = out_dir
     end
 
+    def parse_to_yaml(truth = "en.yml")
+      # for ya2yaml
+      $KCODE="UTF8"
+      Dir::mkdir(@out) unless File.exists? @out
+
+      translations = YAML::load_file("#{@source}/#{truth}")
+      mergee = create_blank_copy(translations)
+
+      with_each_file do |f, filename|
+        me = YAML::load(f)
+        unless filename == truth
+          me = create_missing_keys(me, mergee)
+        end
+
+        me = OrderFact.convert_and_sort(me, true)
+        File.open("#{@out}/__#{filename}", "w+") do |fw|
+          fw.puts me.ya2yaml(:syck_compatible => true)
+        end
+      end
+
+    end
+
+  private
+
     def with_file(filename, &block)
       leafname = filename.scan(/([a-zA-Z_-]*.yml)/).first.to_s
       File.open("#{filename}", "r+") do |f|
@@ -55,13 +79,13 @@ module RailsLocaleSorter
       end
     end
 
-    def create_missing_keys(answer, question)
-      answer_lang = answer.first[0]
-      question_lang = question.first[0]
+    def create_missing_keys(all_keys, object)
+      ak_lang = all_keys.first[0]
+      ob_lang = object.first[0]
 
-      new_values=question[question_lang].merge(answer[answer_lang], &MERGER)
+      new_values = object[ob_lang].merge(all_keys[ak_lang], &MERGER)
 
-      return {question_lang => new_values}
+      return {ob_lang => new_values}
     end
 
     def blank_out_object(object)
@@ -79,26 +103,6 @@ module RailsLocaleSorter
     def create_blank_copy(object)
       obj = object.clone
       blank_out_object(obj)
-    end
-
-    def parse_to_yaml(truth = "en.yml")
-      # for ya2yaml
-      $KCODE="UTF8"
-      translations = YAML::load_file("#{@source}/#{truth}")
-      mergee = create_blank_copy(translations)
-
-      with_each_file do |f, filename|
-        me = YAML::load(f)
-        unless filename == truth
-          me=mergee.merge me, &MERGER
-        end
-
-        me = OrderFact.convert_and_sort(me, true)
-        File.open("#{@out}/__#{filename}", "w+") do |fw|
-          fw.puts me.ya2yaml(:syck_compatible => true)
-        end
-      end
-
     end
   end
 end
