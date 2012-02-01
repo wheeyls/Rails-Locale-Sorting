@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = RailsLocaleSorter::VERSION
   s.authors     = ["Michael Wheeler"]
   s.email       = ["michael.wheeler@tapjoy.com"]
-  s.homepage    = "http://github.com/matchboxmike"
+  s.homepage    = "https://github.com/matchboxmike/Rails-Locale-Sorting"
   s.summary     = %q{Manage Rails Locale YAML: Sort, remove duplicates, and create stubs for other languages.}
   s.description = %q{Manage Rails Locale YAML: Sort, remove duplicates, and create stubs for other languages.}
 
