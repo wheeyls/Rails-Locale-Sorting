@@ -1,6 +1,7 @@
 require "rails_locale_sorter/version"
 require 'rubygems'
 require 'active_support'
+require 'yaml'
 require 'ya2yaml'
 
 module RailsLocaleSorter
@@ -67,7 +68,7 @@ module RailsLocaleSorter
   private
 
     def with_file(filename, &block)
-      leafname = filename.scan(/([a-zA-Z_-]*.yml)/).first.to_s
+      leafname = filename.scan(/[a-zA-Z_-]*.yml/).first.to_s
       File.open("#{filename}", "r+") do |f|
         block.call(f, leafname) unless block.nil?
       end

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'rails_locale_sorter'
 
-puts "Usage: RailsLocaleSorter [source-path] [out-path] [default-language]"
+puts "Usage: locale_generator [source-path] [out-path] [default-language]\n\n\n"
 
 source_dir = ARGV[0] || "locales"
 out_dir = ARGV[1] || "new-locales"
