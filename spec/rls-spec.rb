@@ -22,6 +22,7 @@ describe RailsLocaleSorter::LocaleManager do
     result = File.open("#{OUT_DIR}/out.yml").read
     result.should include "source_only: ~"
     result.should include "src_only: ~"
+    result.should include "both: Both"
     result.should include "out:"
   end
 end
