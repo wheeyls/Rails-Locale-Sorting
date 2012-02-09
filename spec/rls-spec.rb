@@ -23,6 +23,7 @@ describe RailsLocaleSorter::LocaleManager do
     result.should include "source_only: ~"
     result.should include "src_only: ~"
     result.should include "both: Both"
+    result.should include "exotic: 下一页！След"
     result.should include "out:"
   end
 end

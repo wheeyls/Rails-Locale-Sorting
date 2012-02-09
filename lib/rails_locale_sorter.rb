@@ -45,7 +45,7 @@ module RailsLocaleSorter
 
     def parse_to_yaml(truth = "en.yml")
       # for ya2yaml
-      $KCODE="UTF8"
+      $KCODE="Unicode"
       Dir::mkdir(@out) unless File.exists? @out
 
       translations = YAML::load_file("#{@source}/#{truth}")
@@ -54,7 +54,9 @@ module RailsLocaleSorter
       with_each_file do |f, filename|
         me = YAML::load(f)
         unless filename == truth
+          puts me.inspect
           me = create_missing_keys(me, mergee)
+          puts me.inspect
         end
 
         me = OrderFact.convert_and_sort(me, true)
@@ -84,9 +86,9 @@ module RailsLocaleSorter
       ak_lang = all_keys.first[0]
       ob_lang = object.first[0]
 
-      new_values = object[ob_lang].merge(all_keys[ak_lang], &MERGER)
+      new_values = all_keys[ak_lang].merge(object[ob_lang], &MERGER)
 
-      return {ob_lang => new_values}
+      {ob_lang => new_values}
     end
 
     def blank_out_object(object)
