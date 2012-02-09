@@ -52,6 +52,7 @@ module RailsLocaleSorter
       mergee = create_blank_copy(translations)
 
       with_each_file do |f, filename|
+        puts "Processing #{filename}..."
         me = YAML::load(f)
         unless filename == truth
           me = create_missing_keys(me, mergee)
