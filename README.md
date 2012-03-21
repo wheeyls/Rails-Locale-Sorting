@@ -1,6 +1,6 @@
 Rails Locale Sorter
 ===================
-This is a small utility to assist in generating language files, so that as you add strings to your locale files you can have them translated quickly.
+This is a small utility to assist in handling your I18n YAML files in a Ruby on Rails project.
 
 Installation
 ============
@@ -8,13 +8,18 @@ Installation
 $ gem install rails_locale_sorter
 ```
 
-Generating New Files
-====================
-The command tool that comes with the gem will go through your locales directory, and update all the locale files based on your "default" language.
+Creating/Applying Patches
+=========================
+To create a patch, just provide input and output directories, and a "source of truth" locale that will be the template for the other languages.
 
-For instance, if I've added keys to the en.yml file, then the command will create new yaml files for es.yml, zh.yml, etc with blank values set as the new keys.
-
-It defaults to english as the base language; you can change it by passing in a parameter.
 ```
-$ locale_generator path/to/locales path/to/output [en.yml]
+$ locale_patch path/to/locales path/to/output en.yml
+```
+
+The output directory will now contain a list of YAML files containing missing translations.
+
+Once the strings have been translated, they can be applied back into your project:
+
+```
+$ locale_apply path/to/translated_patches path/to/locales
 ```
