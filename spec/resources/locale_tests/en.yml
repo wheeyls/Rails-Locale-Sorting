@@ -1,0 +1,10 @@
+en:
+  text:
+    javascript:
+      invalid: Invalid
+      provide: Provide
+      reactivate: Reactivate
+    shared:
+      oops: Oops
+      fixed: Fixed
+      hello: Hello

@@ -30,6 +30,8 @@ module RailsLocaleSorter
   end
 
   class LocaleManager
+    attr_accessor :source, :out
+
     MERGER = proc do |key, v1, v2|
       if(Hash === v1 && Hash === v2)
         v1.merge(v2, &MERGER)
@@ -45,7 +47,7 @@ module RailsLocaleSorter
       Dir::mkdir(@out) unless File.exists? @out
     end
 
-    def parse_to_yaml(truth = "en.yml")
+    def create_missing_nodes(truth = "en.yml")
       translations = YAML::load_file("#{@source}/#{truth}")
       mergee = create_blank_copy(translations)
 
@@ -58,9 +60,9 @@ module RailsLocaleSorter
       end
     end
 
-    def create_additions(truth = "en.yml")
+    def create_patches(truth = "en.yml")
       translations = YAML::load_file("#{@source}/#{truth}")
-      
+
       process_each_file do |hash, file, filename|
         unless filename == truth
           hash = list_missing_keys(translations, hash)
@@ -69,7 +71,26 @@ module RailsLocaleSorter
         sort_and_write(filename, hash)
       end
     end
+
+    def apply_patches(reverse_dirs = false)
+      swap_dirs if reverse_dirs
+      
+      process_each_file do |patch, file, filename|
+        target = YAML::load_file("#{@out}/#{filename}")
+
+        merged = target.merge(patch, &MERGER)
+
+        sort_and_write(filename, merged)
+      end
+
+      swap_dirs if reverse_dirs
+    end
   private
+    def swap_dirs
+      tmp = @source
+      @source = @out
+      @out = tmp
+    end
 
     def with_file(filename, &block)
       leafname = filename.scan(/[a-zA-Z_-]*.yml/).first.to_s

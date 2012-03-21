@@ -8,4 +8,4 @@ out_dir = ARGV[1] || "new-locales"
 truth_locale = ARGV[2] || "en.yml"
 
 lm = RailsLocaleSorter::LocaleManager.new source_dir, out_dir
-lm.create_additions truth_locale
+lm.create_patches truth_locale

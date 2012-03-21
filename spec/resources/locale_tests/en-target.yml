@@ -1,0 +1,8 @@
+en:
+  text:
+    javascript:
+      provide: Provide
+      reactivate: Reactivate
+    shared:
+      fixed: Fixed
+      hello: Hello
