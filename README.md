@@ -23,3 +23,22 @@ Once the strings have been translated, they can be applied back into your projec
 ```
 $ locale_apply path/to/translated_patches path/to/locales
 ```
+The patching process also sorts the file's content alphabetically.
+
+Defaults
+========
+These commands default to "locales/", "new-locales/", and "en.yml". Meaning that all you need to do to run through the entire process is:
+
+```
+$ cd my_rails_app/config
+$ locale_patch
+$ locale_apply
+```
+
+Or use the handy, descriptive aliases:
+
+```
+$ cd my_rails_app/config
+$ poop
+$ scoop
+```
