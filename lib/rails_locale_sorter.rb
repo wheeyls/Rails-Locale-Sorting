@@ -30,42 +30,45 @@ module RailsLocaleSorter
   end
 
   class LocaleManager
-    MERGER = proc do |key, v1, v2| 
+    MERGER = proc do |key, v1, v2|
       if(Hash === v1 && Hash === v2)
         v1.merge(v2, &MERGER)
       else
-        v2 
+        v2
       end
     end
 
     def initialize(source_dir, out_dir)
       @source = source_dir
       @out = out_dir
+
+      Dir::mkdir(@out) unless File.exists? @out
     end
 
     def parse_to_yaml(truth = "en.yml")
-      # for ya2yaml
-      $KCODE="UTF8"
-      Dir::mkdir(@out) unless File.exists? @out
-
       translations = YAML::load_file("#{@source}/#{truth}")
       mergee = create_blank_copy(translations)
 
-      with_each_file do |f, filename|
-        puts "Processing #{filename}..."
-        me = YAML::load(f)
+      process_each_file do |hash, file, filename|
         unless filename == truth
-          me = create_missing_keys(me, mergee)
+          hash = create_missing_keys(hash, mergee)
         end
 
-        me = OrderFact.convert_and_sort(me, true)
-        File.open("#{@out}/#{filename}", "w+") do |fw|
-          fw.puts me.ya2yaml(:syck_compatible => true)
-        end
+        sort_and_write(filename, hash)
       end
-
     end
 
+    def create_additions(truth = "en.yml")
+      translations = YAML::load_file("#{@source}/#{truth}")
+      
+      process_each_file do |hash, file, filename|
+        unless filename == truth
+          hash = list_missing_keys(translations, hash)
+        end
+
+        sort_and_write(filename, hash)
+      end
+    end
   private
 
     def with_file(filename, &block)
@@ -81,6 +84,26 @@ module RailsLocaleSorter
       end
     end
 
+    def process_each_file(&block)
+      # for ya2yaml
+      $KCODE="UTF8"
+
+      with_each_file do |f, filename|
+        puts "Processing #{filename}..."
+        hash = YAML::load(f)
+
+        block.call(hash, f, filename)
+      end
+    end
+    
+    def sort_and_write(filename, hash)
+      hash = OrderFact.convert_and_sort(hash, true)
+
+      File.open("#{@out}/#{filename}", "w+") do |fw|
+        fw.puts hash.ya2yaml(:syck_compatible => true)
+      end
+    end
+
     def create_missing_keys(object, all_keys)
       ak_lang = all_keys.first[0]
       ob_lang = object.first[0]
@@ -88,6 +111,32 @@ module RailsLocaleSorter
       new_values = all_keys[ak_lang].merge(object[ob_lang], &MERGER)
 
       {ob_lang => new_values}
+    end
+
+    def compare_keys(source, target)
+      new_hash = {}
+
+      source.each do |k, v|
+        if Hash === target[k] && Hash === v
+          res = compare_keys(v, target[k])
+          new_hash[k] = res unless res.empty?
+        elsif target[k].nil?
+          new_hash[k] = v
+        else
+          # do nothing
+          # puts "#{k} is deleted"
+        end
+      end
+
+      new_hash
+    end
+
+    def list_missing_keys(source, target)
+      source_lang = source.first[0]
+      target_lang = target.first[0]
+
+      new_values = compare_keys(source[source_lang], target[target_lang])
+      {target_lang => new_values}
     end
 
     def blank_out_object(object)

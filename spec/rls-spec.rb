@@ -17,14 +17,31 @@ describe RailsLocaleSorter::LocaleManager do
     @lm = RailsLocaleSorter::LocaleManager.new SRC_DIR, OUT_DIR
   end
 
-  it "writes blank keys for new values" do
-    @lm.parse_to_yaml "src.yml"
+  describe "parse_to_yaml" do
+    it "writes blank keys for new values" do
+      @lm.parse_to_yaml "src.yml"
 
-    result = File.open("#{OUT_DIR}/out.yml").read
-    result.should include "source_only: ~"
-    result.should include "src_only: ~"
-    result.should include "both: Both"
-    result.should include "exotic: 下一页！След"
-    result.should include "out:"
+      result = File.open("#{OUT_DIR}/out.yml").read
+      result.should include "source_only: ~"
+      result.should include "src_only: ~"
+      result.should include "both: Both"
+      result.should include "exotic: 下一页！След"
+      result.should include "out:"
+    end
+  end
+
+  describe "create_additions" do
+    it "creates a file of differences only" do
+      @lm.create_additions "src.yml"
+
+      result = File.open("#{OUT_DIR}/out.yml").read
+      result.should include "out:"
+      result.should include "text:"
+      result.should include "source_only: "
+      result.should include "date:"
+      result.should include "src_only: "
+      result.should_not include "both: Both"
+      result.should_not include "exotic: 下一页！След"
+    end
   end
 end
