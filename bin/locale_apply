@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'rails_locale_sorter'
 
-puts "Usage: scoop [source-dir] [out-dir]\n\n\n"
+puts "Usage: locale_apply [source-dir] [out-dir]\n\n\n"
 
 source_dir = ARGV[0] || "new-locales"
 out_dir = ARGV[1] || "locales"

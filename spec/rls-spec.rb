@@ -44,6 +44,19 @@ describe RailsLocaleSorter::LocaleManager do
       result.should_not include "both: Both"
       result.should_not include "exotic: 下一页！След"
     end
+
+    it "allows for filtering of sections" do
+      @lm.create_patches "src.yml", "date"
+
+      result = File.open("#{OUT_DIR}/out.yml").read
+      result.should include "out:"
+      result.should include "text:"
+      result.should include "source_only: "
+      result.should_not include "date:"
+      result.should_not include "src_only: "
+      result.should_not include "both: Both"
+      result.should_not include "exotic: 下一页！След"
+    end
   end
 
   describe "poop and scoop" do

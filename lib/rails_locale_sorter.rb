@@ -60,7 +60,7 @@ module RailsLocaleSorter
       end
     end
 
-    def create_patches(truth = "en.yml")
+    def create_patches(truth = "en.yml", filters = [])
       translations = YAML::load_file("#{@source}/#{truth}")
 
       process_each_file do |hash, file, filename|
@@ -68,7 +68,7 @@ module RailsLocaleSorter
           hash = list_missing_keys(translations, hash)
         end
 
-        sort_and_write(filename, hash)
+        sort_and_write(filename, hash, filters)
       end
     end
 
@@ -108,17 +108,23 @@ module RailsLocaleSorter
     def process_each_file(&block)
       # for ya2yaml
       $KCODE="UTF8"
-
+      
+      puts 'Processing...'
+      
       with_each_file do |f, filename|
-        puts "Processing #{filename}..."
+        print " #{filename.split('.').first} "
+        STDOUT.flush
         hash = YAML::load(f)
 
         block.call(hash, f, filename)
       end
+      puts "Done!"
     end
     
-    def sort_and_write(filename, hash)
+    def sort_and_write(filename, hash, filters = [])
       hash = OrderFact.convert_and_sort(hash, true)
+
+      filters.each { |filt| hash.first.last.delete(filt) }
 
       File.open("#{@out}/#{filename}", "w+") do |fw|
         fw.puts hash.ya2yaml(:syck_compatible => true)
