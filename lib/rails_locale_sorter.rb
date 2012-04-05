@@ -129,7 +129,7 @@ module RailsLocaleSorter
       filters.each { |filt| hash.first.last.delete(filt) }
 
       File.open("#{@out}/#{filename}", "w+") do |fw|
-        fw.puts hash.ya2yaml(:syck_compatible => true)
+        fw.puts hash.ya2yaml(:syck_compatible => true).gsub(/ +$/, '')
       end
     end
 
