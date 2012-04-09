@@ -14,7 +14,7 @@ module RailsLocaleSorter
     def self.convert_and_sort(object, deep = false)
       # from http://seb.box.re/2010/1/15/deep-hash-ordering-with-ruby-1-8/
       if object.is_a?(Hash)
-        # Hash is ordered in Ruby 1.9! 
+        # Hash is ordered in Ruby 1.9!
         res = self.returning(RUBY_VERSION >= '1.9' ? Hash.new : ActiveSupport::OrderedHash.new) do |map|
           object.each {|k, v| map[k] = deep ? convert_and_sort(v, deep) : v }
         end
@@ -74,7 +74,7 @@ module RailsLocaleSorter
 
     def apply_patches(reverse_dirs = false)
       swap_dirs if reverse_dirs
-      
+
       process_each_file do |patch, file, filename|
         target = YAML::load_file("#{@out}/#{filename}")
 
@@ -85,7 +85,9 @@ module RailsLocaleSorter
 
       swap_dirs if reverse_dirs
     end
-  private
+
+    private
+
     def swap_dirs
       tmp = @source
       @source = @out
@@ -108,9 +110,9 @@ module RailsLocaleSorter
     def process_each_file(&block)
       # for ya2yaml
       $KCODE="UTF8"
-      
+
       puts 'Processing...'
-      
+
       with_each_file do |f, filename|
         print " #{filename.split('.').first} "
         STDOUT.flush
@@ -120,14 +122,14 @@ module RailsLocaleSorter
       end
       puts "Done!"
     end
-    
+
     def sort_and_write(filename, hash, filters = [])
       hash = OrderFact.convert_and_sort(hash, true)
 
       filters.each { |filt| hash.first.last.delete(filt) }
 
       File.open("#{@out}/#{filename}", "w+") do |fw|
-        fw.puts hash.ya2yaml(:syck_compatible => true)
+        fw.puts hash.ya2yaml(:syck_compatible => true).gsub(/ +$/, '')
       end
     end
 
